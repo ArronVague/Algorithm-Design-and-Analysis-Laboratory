@@ -17,9 +17,12 @@ int main()
         cnt++;
     }
     sort(arr.begin(), arr.end());
-    for (int i = arr.size() - 1; m > 0 && i >= 0; i--, m--)
+    int idx = arr.size() - 1;
+    while (m > 0 && idx >= 0)
     {
-        cout << arr[i] << " ";
+        cout << arr[idx] << " ";
+        m--;
+        idx--;
     }
     return 0;
 }
