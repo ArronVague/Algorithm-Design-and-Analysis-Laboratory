@@ -1,6 +1,9 @@
 #include <iostream>
 #include <unordered_map>
 #include <queue>
+#include <string>
+#include <algorithm>
+#include <functional>
 using namespace std;
 
 int N, M;
@@ -20,6 +23,7 @@ int main()
         cin >> M;
         vector<int> indeg(N);
         vector<vector<int>> g(N);
+        getchar();
         while (M--)
         {
             string s;
@@ -27,28 +31,34 @@ int main()
             int pos = s.find(' ');
             string pre = s.substr(0, pos);
             string suf = s.substr(pos + 1);
+            indeg[m[suf]]++;
             g[m[pre]].push_back(m[suf]);
         }
-        queue<int> q;
+        priority_queue<int, vector<int>, greater<int>> pq;
         for (int i = 0; i < N; ++i)
         {
             if (indeg[i] == 0)
             {
-                q.push(i);
+                pq.push(i);
             }
         }
-        while (!q.empty())
+        cout << "Case #" << cnt << ": Dilbert should drink beverages in this order:";
+        while (!pq.empty())
         {
-            int cur = q.front();
-            q.pop();
+            int cur = pq.top();
+            pq.pop();
+            cout << " " << a[cur];
             for (auto &nxt : g[cur])
             {
                 if (--indeg[nxt] == 0)
                 {
-                    q.push(nxt);
+                    pq.push(nxt);
                 }
             }
         }
+        cout << "." << endl
+             << endl;
+        cnt++;
     }
     return 0;
 }
