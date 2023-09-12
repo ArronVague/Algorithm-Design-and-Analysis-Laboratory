@@ -13,5 +13,3 @@
 #### D - 魔咒词典
 
 [SYSU-SSE307-Week2-2023 - Virtual Judge (vjudge.net)](https://vjudge.net/contest/579329#problem/D)
-
-
