@@ -1,3 +1,5 @@
+# 暴力求解
+
 #### A - Link/Cut Tree
 
 [SYSU-SSE307-Week3-2023 - Virtual Judge (vjudge.net)](https://vjudge.net/contest/580805#problem)
