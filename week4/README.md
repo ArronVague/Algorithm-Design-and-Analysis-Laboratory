@@ -19,3 +19,9 @@
 #### D - a-Good String
 
 [SYSU-SSE307-Week4-2023 - Virtual Judge](https://vjudge.net/contest/581855#problem/D)
+
+#### E - 最大子段和
+
+[SYSU-SSE307-Week4-2023 - Virtual Judge](https://vjudge.net/contest/581855#problem/E)
+
+O(n) 动态规划
