@@ -24,3 +24,5 @@
     - 整体二分
     
     - 归并排序
+  
+  - [搜索 search.cpp](template/search.cpp)
