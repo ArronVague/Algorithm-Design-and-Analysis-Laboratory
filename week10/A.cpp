@@ -1,135 +1,125 @@
+#include <algorithm>
 #include <iostream>
-#include <queue>
+#include <cstring>
 #include <string>
 #include <vector>
+#include <cstdio>
+#include <cctype>
+#include <stack>
+#include <queue>
+#include <cmath>
 using namespace std;
+#define MAXN 400000
 
-int vis[362888] = {0};
-int fac[10] = {1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880};
-int dir[4][2] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-char dir_c[4] = {'l', 'r', 'u', 'd'};
-int c[362888] = {0};
-
-const int mod = 1000000007;
-
-int Cantor(string s)
+struct State
 {
-    int n = s.size();
-    vector<int> tree(n + 1);
-    auto add = [&](int i, int val)
-    {
-        for (; i <= n; i += i & -i)
-        {
-            tree[i] += val;
-        }
-    };
-    auto sum = [&](int i)
-    {
-        int res = 0;
-        for (; i > 0; i &= i - 1)
-        {
-            res += tree[i];
-        }
-        return res;
-    };
-    for (int i = 1; i <= n; i++)
-    {
-        add(i, 1);
-    }
+    int state[9];
+    int pos;                                             // 空格位置
+    char ch[50];                                         // 记录原始状态到达当前状态的路径(数组不能开太大不然超内存)
+} s[MAXN];                                               // 每一个状态对应一个结构体
+int factor[9] = {1, 1, 2, 6, 24, 120, 720, 5040, 40320}; // 阶乘数组
+int dir[4][2] = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};      // 方向数组
+char dirtion[4] = {'u', 'r', 'd', 'l'};
+int vis[MAXN]; // 标记某个状态是否被走过
+int start;     // 保存原始输入状态的哈希值
+State star;    // 原始状态对应的结构体
+queue<int> q;  // 这里不能直接放结构体，不然肯定超时
 
-    int ans = 0;
-    for (int i = 0; i < n; i++)
+// 哈希映射
+int Hash(int s[])
+{
+    int i, j, temp, num;
+    num = 0;
+    for (i = 0; i < 9; i++)
     {
-        if (s[i] == 'x')
+        temp = 0;
+        for (j = i + 1; j < 9; j++)
         {
-            s[i] = '0';
+            if (s[j] < s[i])
+                temp++;
         }
-        int v = s[i];
-        ans = (ans + 1LL * sum(v - 1) * fac[n - 1 - i] % mod) % mod;
-        add(v, -1);
+        num += factor[8 - i] * temp;
     }
-    ans++; // 从 1 开始的排名
-    ans %= mod;
-    return ans;
+    return num;
 }
 
-struct node
+// 广搜
+bool Bfs()
 {
-    string state;
-    int cantor;
-    int pos;
-    node(string s, int c, int p) : state(s), cantor(c), pos(p) {}
-};
+    while (!q.empty())
+        q.pop();
+    memset(vis, 0, sizeof(vis));
+    start = Hash(star.state);
+    vis[start] = 1;
+    s[start] = star;
+    q.push(start);
 
-struct path
-{
-    int from;
-    char d;
-} pa[362888];
-
-void bfs(string s)
-{
-    queue<node> q;
-    int can = Cantor(s);
-    q.push(node(s, can, 8));
-    vis[can] = 1;
-    pa[can].from = -1;
     while (!q.empty())
     {
-        // cout << "yes" << endl;
-        node t = q.front();
+        State cur = s[q.front()];
         q.pop();
-        int x = t.pos / 3, y = t.pos % 3;
-        for (int i = 0; i < 4; ++i)
+
+        int x, y, r, c;
+        x = cur.pos / 3;
+        y = cur.pos % 3;
+        for (int i = 0; i < 4; i++)
         {
-            int nx = x + dir[i][0], ny = y + dir[i][1];
-            if (nx >= 0 && nx < 3 && ny >= 0 && ny < 3)
-            {
-                string tmp = t.state;
-                int nxt_s = nx * 3 + ny;
-                swap(tmp[t.pos], tmp[nxt_s]);
-                can = Cantor(tmp);
-                if (!vis[can])
-                {
-                    vis[can] = 1;
-                    // cout << can << " " << t.cantor << endl;
-                    pa[can].from = t.cantor;
-                    pa[can].d = dir_c[i];
-                    q.push(node(tmp, can, nxt_s));
-                }
+            r = x + dir[i][0];
+            c = y + dir[i][1];
+            if (r < 0 || c < 0 || r >= 3 || c >= 3)
+                continue;
+
+            State tmp = cur;
+            tmp.state[tmp.pos] = tmp.state[3 * r + c]; // 原先空格位置换成新的编号
+            tmp.pos = 3 * r + c;
+            tmp.state[tmp.pos] = 9; // 重新更新空格位置
+
+            int hash = Hash(tmp.state); // 求出当前哈希值
+            if (vis[hash])
+                continue;
+
+            vis[hash] = 1;
+            int len = strlen(cur.ch); // 求出前一个状态的路径长度
+            tmp.ch[len] = dirtion[i]; // 更新路径
+            s[hash] = tmp;            // 赋值
+            if (hash == 0)
+            { // 如果搜索到目标节点直接输出退出
+                printf("%s\n", s[hash].ch);
+                return 1;
             }
+            q.push(hash); // 入对列
         }
     }
+    return 0;
 }
 
 int main()
 {
-    bfs("12345678x");
-    string s;
-    while (getline(cin, s))
+    char c;
+    while (scanf("%c", &c) != EOF)
     {
-        string puzzle;
-        for (int i = 0; i < s.size(); ++i)
+        if (c == 'x')
         {
-            if (s[i] != ' ')
-            {
-                puzzle += s[i];
-            }
-        }
-        int can = Cantor(puzzle);
-        if (vis[can])
-        {
-            while (can != -1)
-            {
-                cout << pa[can].d;
-                can = pa[can].from;
-            }
-            cout << endl;
+            star.state[0] = 9;
+            star.pos = 0;
         }
         else
+            star.state[0] = c - '0';
+        for (int i = 1; i < 9; i++)
         {
-            cout << "unsolvable" << endl;
+            scanf(" %c", &c);
+            if (c == 'x')
+            {
+                star.pos = i;
+                star.state[i] = 9;
+            }
+            else
+                star.state[i] = c - '0';
         }
+        getchar();
+        int flag = Bfs();
+        if (!flag)
+            printf("unsolvable\n"); // 无解的情况
     }
     return 0;
 }
