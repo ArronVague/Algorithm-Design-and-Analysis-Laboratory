@@ -2,6 +2,8 @@
 
 ## template
 
+- [位运算](template/bitwise_operations.md)
+
 - [动态规划 dp.cpp](template/dp.cpp)
   - 背包
     
