@@ -66,24 +66,39 @@ ll k;
 int x, y;
 vector<vector<int>> g;
 vector<int> val;
-vector<int> deg;
 
 bool check(ll mx)
 {
-    vector<int> tmp_deg = deg;
+    vector<int> deg(n + 1);
+    int left = n;
+    for (int i = 1; i <= n; ++i)
+    {
+        if (val[i] > mx)
+        {
+            left--;
+            continue;
+        }
+        for (auto nxt : g[i])
+        {
+
+            if (val[nxt] <= mx)
+            {
+                deg[nxt]++;
+            }
+        }
+    }
     queue<int> q;
-    vector<int> depth(n);
-    int cnt = 0;
+    vector<ll> depth(n + 1, 0);
     for (int i = 1; i <= n; ++i)
     {
         if (val[i] > mx)
         {
             continue;
         }
-        if (tmp_deg[i] == 0 && val[i] <= mx)
+        if (deg[i] == 0)
         {
+
             q.push(i);
-            cnt++;
             depth[i] = 1;
         }
     }
@@ -91,50 +106,42 @@ bool check(ll mx)
     {
         int cur = q.front();
         q.pop();
+        left--;
         for (auto nxt : g[cur])
         {
             if (val[nxt] > mx)
             {
                 continue;
             }
-            tmp_deg[nxt]--;
+            deg[nxt]--;
             depth[nxt] = max(depth[nxt], depth[cur] + 1);
-            if (tmp_deg[nxt] == 0)
+            if (deg[nxt] == 0)
             {
                 q.push(nxt);
-                cnt++;
             }
         }
     }
     // 有环
-    if (cnt < n)
-    {
-        return true;
-    }
-    if (*max_element(depth.begin(), depth.end()) >= k)
-    {
-        return true;
-    }
-    return false;
+    return left > 0 || *max_element(depth.begin(), depth.end()) >= k;
 }
 
-ll binary(ll left, ll right)
+int binary(int left, int right)
 {
     // 开区间写法
     while (left + 1 < right)
     {
-        ll mid = left + (right - left) / 2;
+        int mid = left + (right - left) / 2;
         if (check(mid))
         {
             // 谁在check()中谁就是答案
-            left = mid;
+            right = mid;
         }
         else
         {
-            right = mid;
+            left = mid;
         }
     }
-    return left;
+    return right;
 }
 
 int main()
@@ -142,7 +149,6 @@ int main()
     cin >> n >> m >> k;
     g.resize(n + 1);
     val.resize(n + 1);
-    deg.resize(n + 1);
     for (int i = 1; i <= n; i++)
     {
         cin >> val[i];
@@ -151,9 +157,15 @@ int main()
     {
         cin >> x >> y;
         g[x].push_back(y);
-        deg[y]++;
     }
-    ll ans = binary(0, 1e18 + 1);
-    cout << ans;
+    int ans = binary(0, 1e9 + 1);
+    if (ans > 1e9)
+    {
+        cout << -1 << endl;
+    }
+    else
+    {
+        cout << ans << endl;
+    }
     return 0;
 }
