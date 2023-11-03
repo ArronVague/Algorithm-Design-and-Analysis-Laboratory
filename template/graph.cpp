@@ -70,6 +70,80 @@ public:
     }
 };
 
+// 有向图的拓扑排序 Kahn's algorithm
+// 可以用来判断有向图是否有环、求 DAG 上的 DP 等
+// https://oi-wiki.org/graph/topo/
+// https://cp-algorithms.com/graph/topological-sort.html
+// DAG DP https://codeforces.com/problemset/problem/1679/D
+#include <bits/stdc++.h>
+#define ll long long
+using namespace std;
+
+int n, m;
+ll k;
+int x, y;
+vector<vector<int>> g;
+vector<int> val;
+
+bool check(ll mx)
+{
+    // 计算入度
+    vector<int> deg(n + 1);
+    int left = n;
+    for (int i = 1; i <= n; ++i)
+    {
+        for (auto nxt : g[i])
+        {
+            deg[nxt]++;
+        }
+    }
+    queue<int> q;
+    vector<ll> depth(n + 1, 0);
+    for (int i = 1; i <= n; ++i)
+    {
+        if (deg[i] == 0)
+        {
+
+            q.push(i);
+            // 可初始化dp
+            depth[i] = 1;
+        }
+    }
+    while (q.size())
+    {
+        int cur = q.front();
+        q.pop();
+        left--;
+        for (auto nxt : g[cur])
+        {
+            deg[nxt]--;
+            depth[nxt] = max(depth[nxt], depth[cur] + 1);
+            if (deg[nxt] == 0)
+            {
+                q.push(nxt);
+            }
+        }
+    }
+    // 若left > 0说明有环
+}
+
+int main()
+{
+    cin >> n >> m >> k;
+    // 建图
+    g.resize(n + 1);
+    val.resize(n + 1);
+    for (int i = 1; i <= n; i++)
+    {
+        cin >> val[i];
+    }
+    for (int i = 0; i < m; i++)
+    {
+        cin >> x >> y;
+        g[x].push_back(y);
+    }
+}
+
 // 基环树（环套树），英文名叫 pseudotree，基环树森林叫 pseudoforest
 // https://en.wikipedia.org/wiki/Pseudoforest
 // https://leetcode.cn/problems/maximum-employees-to-be-invited-to-a-meeting/description/ 参加会议的最多员工数
