@@ -100,3 +100,10 @@ int main()
         cout << dp[n][m] << endl;
     }
 }
+
+// 树形 DP
+// 思考方向：
+// 每个节点需要计算的信息，是否只取决于邻居？
+// 如果不能，如何把子树的信息归纳到邻居上？
+// https://leetcode.cn/problems/maximum-score-after-applying-operations-on-a-tree/description/
+// https://leetcode.cn/problems/house-robber-iii/description/ 打家劫舍3

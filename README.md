@@ -13,6 +13,7 @@
     
     - 最大子段和
     - LCS（最长公共子序列）
+  - 树形DP
   
 - [图论 graph.cpp](template/graph.cpp)
   - 拓扑排序
