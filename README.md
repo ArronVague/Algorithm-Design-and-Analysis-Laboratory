@@ -4,7 +4,9 @@
 
 - [位运算](template/bitwise_operations.md)
 - 数据结构
-- [并查集 union_find.cpp](template/union_find.cpp)
+  - [并查集 union_find.cpp](template/union_find.cpp)
+- 字符串
+  - [异或字典树 trie01.cpp](template/trie01.cpp)
 - [动态规划 dp.cpp](template/dp.cpp)
   - 背包
     
@@ -26,3 +28,4 @@
     
   - [搜索 search.cpp](template/search.cpp)
     - 康托展开
+  - [基础算法 common.cpp](template/common.cpp)
