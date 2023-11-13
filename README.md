@@ -5,6 +5,7 @@
 - [位运算](template/bitwise_operations.md)
 - 数据结构
   - [并查集 union_find.cpp](template/union_find.cpp)
+  - [树状数组 fenwick_tree.cpp](template/fenwick_tree.cpp)
 - 字符串
   - [异或字典树 trie01.cpp](template/trie01.cpp)
 - [动态规划 dp.cpp](template/dp.cpp)
