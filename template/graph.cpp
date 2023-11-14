@@ -1,4 +1,38 @@
+#include <bits/stdc++.h>
+#define ll long long
+using namespace std;
+
 // 图论
+
+/*
+// 任意两点最短路 Floyd-Warshall  O(n^3)  本质是求 Min-plus matrix multiplication
+// 传入邻接矩阵 dis
+// dis[v][w] == inf 表示没有 v-w 边
+// https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm
+// https://en.wikipedia.org/wiki/Min-plus_matrix_multiplication
+// https://oi-wiki.org/graph/shortest-path/#floyd
+// https://zhuanlan.zhihu.com/p/623757829
+*/
+
+vector<vector<int>> shortestPathFloydWarshall(vector<vector<int>> dis)
+{
+    // dis[k][i][j] 表示「经过若干个编号不超过 k 的中间节点」时，从 i 到 j 的最短路长度，其中第一维可以压缩掉
+    // 为什么可以把第一维度去掉？dis[i][k] 和 dis[k][j] 不会被覆盖掉吗？
+    // 见算法导论第三版练习 25.2-4（网络上有习题解答）
+    int n = dis.size();
+    for (int k = 0; k < n; ++k) // 中间节点的最大编号
+    {
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = 0; j < n; ++j)
+            {
+                // 决策（k 不是中间节点，k 是中间节点）
+                dis[i][j] = min(dis[i][j], dis[i][k] + dis[k][j]);
+            }
+        }
+    }
+    return dis;
+}
 
 // 拓扑排序
 // https://leetcode.cn/problems/collect-coins-in-a-tree/description/ 收集树中金币
@@ -75,9 +109,6 @@ public:
 // https://oi-wiki.org/graph/topo/
 // https://cp-algorithms.com/graph/topological-sort.html
 // DAG DP https://codeforces.com/problemset/problem/1679/D
-#include <bits/stdc++.h>
-#define ll long long
-using namespace std;
 
 int n, m;
 ll k;
