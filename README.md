@@ -4,6 +4,7 @@
 
 - [位运算](template/bitwise_operations.md)
 - 数据结构
+  - [堆（优先队列） heap.cpp](template/heap.cpp)
   - [并查集 union_find.cpp](template/union_find.cpp)
   - [树状数组 fenwick_tree.cpp](template/fenwick_tree.cpp)
 - 字符串
