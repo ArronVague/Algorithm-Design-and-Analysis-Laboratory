@@ -32,3 +32,23 @@
   - [搜索 search.cpp](template/search.cpp)
     - 康托展开
   - [基础算法 common.cpp](template/common.cpp)
+
+## 考试
+
+### 笔试
+
+考的都是ppt
+
+不会考内存优化
+
+可以当数据结构复习
+
+### 机试
+
+stl
+
+枚举
+
+搜索（理论不好考）
+
+图论
