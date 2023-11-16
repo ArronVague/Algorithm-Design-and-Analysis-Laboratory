@@ -1,1 +1,7 @@
-package codeforces
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Hello World!")
+}
