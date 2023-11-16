@@ -4,12 +4,12 @@
 
 - [位运算](template/bitwise_operations.md)
 - 数据结构
-  - [堆（优先队列） heap.cpp](template/heap.cpp)
-  - [并查集 union_find.cpp](template/union_find.cpp)
-  - [树状数组 fenwick_tree.cpp](template/fenwick_tree.cpp)
+  - [堆（优先队列） heap.cpp](copypasta-cpp/heap.cpp)
+  - [并查集 union_find.cpp](copypasta-cpp/union_find.cpp)
+  - [树状数组 fenwick_tree.cpp](copypasta-cpp/fenwick_tree.cpp)
 - 字符串
-  - [异或字典树 trie01.cpp](template/trie01.cpp)
-- [动态规划 dp.cpp](template/dp.cpp)
+  - [异或字典树 trie01.cpp](copypasta-cpp/trie01.cpp)
+- [动态规划 dp.cpp](copypasta-cpp/dp.cpp)
   - 背包
     
     - 0-1背包
@@ -19,20 +19,20 @@
     - 最大子段和
     - LCS（最长公共子序列）
   - 树形DP
-- [图论 graph.cpp](template/graph.cpp)
+- [图论 graph.cpp](copypasta-cpp/graph.cpp)
   - 最短路
     - Floyd-Warshall
   - 拓扑排序
   - 基环树
 - 其他
   
-  - [二分 sort.cpp](template/sort.cpp)
+  - [二分 sort.cpp](copypasta-cpp/sort.cpp)
     - 整体二分
     - 归并排序
     
-  - [搜索 search.cpp](template/search.cpp)
+  - [搜索 search.cpp](copypasta-cpp/search.cpp)
     - 康托展开
-  - [基础算法 common.cpp](template/common.cpp)
+  - [基础算法 common.cpp](copypasta-cpp/common.cpp)
 
 ## 考试
 
