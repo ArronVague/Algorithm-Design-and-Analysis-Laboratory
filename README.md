@@ -8,12 +8,15 @@
   - [并查集 union_find.cpp](copypasta/cpp/union_find.cpp)
   - [树状数组 fenwick_tree.cpp](copypasta/cpp/fenwick_tree.cpp)
 - [字符串 strings.cpp](copypasta/cpp/strings.cpp)
+  - KMP
+  - [字典树 trie.cpp](copypasta/cpp/trie.cpp)
   - [异或字典树 trie01.cpp](copypasta/cpp/trie01.cpp)
+
 - [动态规划 dp.cpp](copypasta/cpp/dp.cpp)
   - 背包
     
     - 0-1背包
-  
+
   - 线性DP
     
     - 最大子段和
@@ -25,7 +28,7 @@
   - 拓扑排序
   - 基环树
 - 其他
-  
+
   - [二分 sort.cpp](copypasta/cpp/sort.cpp)
     - 整体二分
     - 归并排序
