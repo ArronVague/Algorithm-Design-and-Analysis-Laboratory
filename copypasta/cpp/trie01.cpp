@@ -1,9 +1,10 @@
+#include <bits/stdc++.h>
+using namespace std;
+
 /*
 异或字典树
 */
 // https://leetcode.cn/problems/maximum-strong-pair-xor-ii/description/ 找出强数对的最大异或值 II
-#include <bits/stdc++.h>
-using namespace std;
 
 class Node
 {
