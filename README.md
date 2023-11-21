@@ -7,7 +7,7 @@
   - [堆（优先队列） heap.cpp](copypasta/cpp/heap.cpp)
   - [并查集 union_find.cpp](copypasta/cpp/union_find.cpp)
   - [树状数组 fenwick_tree.cpp](copypasta/cpp/fenwick_tree.cpp)
-- 字符串
+- [字符串 strings.cpp](copypasta/cpp/strings.cpp)
   - [异或字典树 trie01.cpp](copypasta/cpp/trie01.cpp)
 - [动态规划 dp.cpp](copypasta/cpp/dp.cpp)
   - 背包
