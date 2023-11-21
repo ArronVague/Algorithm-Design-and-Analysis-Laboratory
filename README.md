@@ -59,3 +59,9 @@ stl
 搜索（理论不好考）
 
 图论
+
+## Problems
+
+### C++字符串输入问题
+
+`cin >> string`无法用来判断是否输入空行从而退出循环。使用`getline(cin, string)`配合`string.empty()`判断输入的空行。
