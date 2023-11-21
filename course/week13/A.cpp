@@ -1,3 +1,5 @@
+// https://vjudge.net/contest/595692#problem/A T3句子反转
+
 #include <bits/stdc++.h>
 using namespace std;
 

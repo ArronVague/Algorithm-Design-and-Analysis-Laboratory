@@ -1,3 +1,5 @@
+// https://vjudge.net/contest/595692#problem/B 统计难题
+
 #include <iostream>
 #include <map>
 #include <string>
