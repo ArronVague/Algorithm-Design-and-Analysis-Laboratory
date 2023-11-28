@@ -1,90 +1,87 @@
 #include <iostream>
 #include <vector>
 #include <cstring>
+#include <functional>
 using namespace std;
 
-const int maxN = 1e4 + 10;
+vector<vector<int>> sccKosaraju(int n, int m)
+{
+    vector<vector<int>> g(n), rg(n);
+    for (int i = 0; i < m; ++i)
+    {
+        int v, w;
+        cin >> v >> w;
+        g[v - 1].push_back(w - 1);
+        rg[w - 1].push_back(v - 1);
+    }
 
-vector<vector<int>> g(maxN), rg(maxN);
-bool vis[maxN];
-int L[maxN];
+    // 生成 DFS 后序（用于跑逆后序遍历，这样生成的 SCC 一定是拓扑序）
+    vector<int> vs;
+    vector<bool> vis(n);
+    function<void(int)> dfs = [&](int v)
+    {
+        vis[v] = true;
+        for (auto w : g[v])
+        {
+            if (!vis[w])
+            {
+                dfs(w);
+            }
+        }
+        vs.push_back(v);
+    };
+    for (int i = 0; i < n; ++i)
+    {
+        if (!vis[i])
+        {
+            dfs(i);
+        }
+    }
+
+    vis.assign(n, false);
+    vector<int> comp;
+    function<void(int)> rdfs = [&](int v)
+    {
+        vis[v] = true;
+        comp.push_back(v);
+        for (auto w : rg[v])
+        {
+            if (!vis[w])
+            {
+                rdfs(w);
+            }
+        }
+    };
+
+    vector<vector<int>> scc;
+
+    for (int i = n - 1; i >= 0; --i)
+    {
+        int v = vs[i];
+        if (!vis[v])
+        {
+            comp.clear();
+            rdfs(v);
+            scc.push_back(comp);
+        }
+    }
+    return scc;
+}
+
 int N, M;
-int k;
-
-void init()
-{
-    k = 0;
-    for (int i = 0; i <= N; i++)
-    {
-        g[i].clear();
-        rg[i].clear();
-    }
-    memset(vis, 0, sizeof(vis));
-    memset(L, 0, sizeof(L));
-}
-
-void dfs1(int x)
-{
-    vis[x] = true;
-    // cout << "?" << endl;
-    for (int i = 0; i < rg[x].size(); i++)
-    {
-        if (vis[rg[x][i]] == false)
-        {
-            dfs1(rg[x][i]);
-        }
-    }
-    L[++k] = x;
-}
-
-void dfs2(int x)
-{
-    vis[x] = false;
-    for (int i = 0; i < g[x].size(); i++)
-    {
-        if (vis[g[x][i]])
-        {
-            dfs2(g[x][i]);
-        }
-    }
-}
 
 int main()
 {
     while (cin >> N >> M && N)
     {
-        init();
-        int a, b;
-        while (M--)
+        auto scc = sccKosaraju(N, M);
+        if (scc.size() == 1)
         {
-            cin >> a >> b;
-            g[a].push_back(b);
-            rg[b].push_back(a);
-        }
-        // cout << "yes" << endl;
-        for (int i = 1; i <= N; i++)
-        {
-            if (vis[i] == false)
-            {
-                dfs1(i);
-            }
-        }
-        int cnt = 0;
-        for (int i = N; i >= 1; i--)
-        {
-            if (vis[L[i]] == true)
-            {
-                cnt++;
-                dfs2(L[i]);
-            }
-        }
-        if (cnt > 1)
-        {
-            cout << "No" << endl;
+            cout << "Yes" << endl;
         }
         else
         {
-            cout << "Yes" << endl;
+            cout << "No" << endl;
         }
     }
     return 0;

@@ -24,8 +24,8 @@ vector<int> eulerianPathOnDirectedGraph(int n, int m)
     {
         int v, w;
         cin >> v >> w;
-        g[v - 1].push_back(w - 1);
-        inDeg[w - 1]++;
+        g[v].push_back(w);
+        inDeg[w]++;
         // read g ...
     }
 
@@ -75,7 +75,7 @@ vector<int> eulerianPathOnDirectedGraph(int n, int m)
             g[u].erase(g[u].begin());
             dfs(v);
         }
-        path.push_back(u + 1);
+        path.push_back(u);
     };
     dfs(st);
 
@@ -156,6 +156,76 @@ vector<int> topoSort(int n, vector<vector<int>> edges)
         }
     }
     return orders;
+}
+
+// 强连通分量分解 Strongly Connected Component (SCC)
+// https://en.wikipedia.org/wiki/Kosaraju%27s_algorithm
+// https://oi-wiki.org/graph/scc/#kosaraju
+// https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/KosarajuSharirSCC.java.html
+
+vector<vector<int>> sccKosaraju(int n, int m)
+{
+    vector<vector<int>> g(n), rg(n);
+    for (int i = 0; i < m; ++i)
+    {
+        int v, w;
+        cin >> v >> w;
+        g[v].push_back(w);
+        rg[w].push_back(v);
+    }
+
+    // 生成 DFS 后序（用于跑逆后序遍历，这样生成的 SCC 一定是拓扑序）
+    vector<int> vs;
+    vector<bool> vis(n);
+    function<void(int)> dfs = [&](int v)
+    {
+        vis[v] = true;
+        for (auto w : g[v])
+        {
+            if (!vis[w])
+            {
+                dfs(w);
+            }
+        }
+        vs.push_back(v);
+    };
+    for (int i = 0; i < n; ++i)
+    {
+        if (!vis[i])
+        {
+            dfs(i);
+        }
+    }
+
+    vis.assign(n, false);
+    vector<int> comp;
+    function<void(int)> rdfs = [&](int v)
+    {
+        vis[v] = true;
+        comp.push_back(v);
+        for (auto w : rg[v])
+        {
+            if (!vis[w])
+            {
+                rdfs(w);
+            }
+        }
+    };
+
+    vector<vector<int>> scc;
+
+    // 逆后序遍历，就可以像无向图那样求出 SCC
+    for (int i = n - 1; i >= 0; --i)
+    {
+        int v = vs[i];
+        if (!vis[v])
+        {
+            comp.clear();
+            rdfs(v);
+            scc.push_back(comp);
+        }
+    }
+    return scc;
 }
 
 // 基环树（环套树），英文名叫 pseudotree，基环树森林叫 pseudoforest
