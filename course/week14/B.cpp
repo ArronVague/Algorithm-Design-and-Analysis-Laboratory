@@ -1,13 +1,13 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int maxN = 1e5 + 10;
+const int MAXN = 1e5 + 10;
 int n, m;
-int indeg[maxN], outdeg[maxN];
-vector<int> g[maxN];
+int indeg[MAXN], outdeg[MAXN];
+vector<int> g[MAXN];
 int u, v;
 vector<int> ans;
-int flag[maxN];
+int flag[MAXN];
 
 int isEuler()
 {
