@@ -9,77 +9,86 @@ int u, v;
 vector<int> ans;
 int flag[MAXN];
 
-int isEuler()
+vector<int> eulerianPathOnDirectedGraph(int n, int m)
 {
-    int start = 1;
-    bool allZero = true;
-    int sum1 = 0, sum2 = 0;
-    for (int i = 1; i <= n; ++i)
-    {
-        if (indeg[i] != outdeg[i])
-        {
-            allZero = false;
-        }
-        if (indeg[i] - outdeg[i] > 1)
-        {
-            return -1;
-        }
-        if (indeg[i] - outdeg[i] == 1)
-        {
-            sum1++;
-        }
-        if (outdeg[i] - indeg[i] == 1)
-        {
-            sum2++;
-            start = i;
-        }
-    }
-    if (allZero || (sum1 == sum2 && sum1 == 1))
-    {
-        return start;
-    }
-    return -1;
-}
+    vector<vector<int>> g(n, vector<int>());
+    vector<int> inDeg(n);
 
-void dfs(int x)
-{
-    // cout << "fuck" << endl;
-    while (flag[x] < g[x].size())
+    for (int i = 0; i < m; ++i)
     {
-        int t = flag[x];
-        flag[x]++;
-        dfs(g[x][t]);
+        int v, w;
+        cin >> v >> w;
+        g[v - 1].push_back(w - 1);
+        inDeg[w - 1]++;
     }
-    // cout << "dfs" << x << endl;
-    ans.push_back(x);
+
+    // 排序，保证字典序最小
+    for (auto &es : g)
+    {
+        sort(es.begin(), es.end());
+    }
+
+    int st = -1, end = -1;
+    for (int i = 0; i < g.size(); ++i)
+    {
+        // 出度比入度大一，为起点
+        if (g[i].size() == inDeg[i] + 1)
+        {
+            if (st >= 0)
+            {
+                return vector<int>();
+            }
+            st = i;
+        }
+        // 入度比出度大一，为终点
+        if (g[i].size() + 1 == inDeg[i])
+        {
+            if (end >= 0)
+            {
+                return vector<int>();
+            }
+            else
+            {
+                end = i;
+            }
+        }
+        // 任意起点
+        if (st < 0)
+        {
+            st = 0;
+        }
+    }
+    vector<int> path(m + 1);
+    function<void(int)> dfs = [&](int u)
+    {
+        while (g[u].size())
+        {
+            int v = g[u].front();
+            g[u].erase(g[u].begin());
+            dfs(v);
+        }
+        path.push_back(u + 1);
+    };
+    dfs(st);
+    cout << ans.size() << endl;
+    reverse(path.begin(), path.end());
+    return path;
 }
 
 int main()
 {
     cin >> n >> m;
-    while (m--)
+    vector<int> ans = eulerianPathOnDirectedGraph(n, m);
+    if (ans.size() == 0)
     {
-        cin >> u >> v;
-        g[u].push_back(v);
-        indeg[v]++;
-        outdeg[u]++;
-    }
-    for (int i = 1; i <= n; i++)
-    {
-        sort(g[i].begin(), g[i].end());
-    }
-    int start = isEuler();
-    // cout << start;
-    if (start == -1)
-    {
-        cout << "No" << endl;
+        cout << "NO" << endl;
     }
     else
     {
-        dfs(start);
-        for (int i = ans.size() - 1; i >= 0; i--)
+
+        for (auto i : ans)
         {
-            cout << ans[i] << " ";
+            cout << i << " ";
         }
     }
     return 0;

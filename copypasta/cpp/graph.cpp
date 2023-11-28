@@ -4,6 +4,82 @@ using namespace std;
 
 // 图论
 
+// 欧拉图（欧拉回路）   半欧拉图（欧拉路径）
+// 半欧拉图：具有欧拉路径而无欧拉回路的图
+// 判别法如下 https://oi-wiki.org/graph/euler/#_3
+// 无向图-欧拉回路：连通且没有奇度数点
+// 无向图-欧拉路径：连通且恰有 0 或 2 个奇度数点（若有则选择其中一奇度数点为起点）
+// 有向图-欧拉回路：SCC 只有一个且每个点的入度和出度相同
+// 有向图-欧拉路径：1. 对应的无向图是连通的；2. 若每个点的入度和出度相同则起点任意；否则起点的出度比入度多一，终点的入度比出度多一，且其余点的入度和出度相同
+//
+// NOTE: 递归前对边排序可保证输出的是字典序最小的路径
+
+vector<int> eulerianPathOnDirectedGraph(int n, int m)
+{
+    vector<vector<int>> g(n, vector<int>());
+    vector<int> inDeg(n);
+
+    for (int i = 0; i < m; ++i)
+    {
+        int v, w;
+        cin >> v >> w;
+        g[v].push_back(w);
+        inDeg[w]++;
+    }
+
+    // 排序，保证字典序最小
+    for (auto &es : g)
+    {
+        sort(es.begin(), es.end());
+    }
+
+    int st = -1, end = -1;
+    for (int i = 0; i < g.size(); ++i)
+    {
+        // 出度比入度大一，为起点
+        if (g[i].size() == inDeg[i] + 1)
+        {
+            if (st >= 0)
+            {
+                return vector<int>();
+            }
+            st = i;
+        }
+        // 入度比出度大一，为终点
+        if (g[i].size() + 1 == inDeg[i])
+        {
+            if (end >= 0)
+            {
+                return vector<int>();
+            }
+            else
+            {
+                end = i;
+            }
+        }
+        // 任意起点
+        if (st < 0)
+        {
+            st = 0;
+        }
+    }
+    vector<int> path(m + 1);
+    function<void(int)> dfs = [&](int u)
+    {
+        while (g[u].size())
+        {
+            int v = g[u].front();
+            g[u].erase(g[u].begin());
+            dfs(v);
+        }
+        path.push_back(u);
+    };
+    dfs(st);
+
+    reverse(path.begin(), path.end());
+    return path;
+}
+
 /*
 // 任意两点最短路 Floyd-Warshall  O(n^3)  本质是求 Min-plus matrix multiplication
 // 传入邻接矩阵 dis
