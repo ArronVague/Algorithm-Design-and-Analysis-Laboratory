@@ -1,13 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int MAXN = 1e5 + 10;
 int n, m;
-int indeg[MAXN], outdeg[MAXN];
-vector<int> g[MAXN];
-int u, v;
-vector<int> ans;
-int flag[MAXN];
 
 vector<int> eulerianPathOnDirectedGraph(int n, int m)
 {
@@ -47,18 +41,17 @@ vector<int> eulerianPathOnDirectedGraph(int n, int m)
             {
                 return vector<int>();
             }
-            else
-            {
-                end = i;
-            }
-        }
-        // 任意起点
-        if (st < 0)
-        {
-            st = 0;
+            end = i;
         }
     }
-    vector<int> path(m + 1);
+
+    // 任意起点
+    if (st < 0)
+    {
+        st = 0;
+    }
+
+    vector<int> path;
     function<void(int)> dfs = [&](int u)
     {
         while (g[u].size())
@@ -70,7 +63,7 @@ vector<int> eulerianPathOnDirectedGraph(int n, int m)
         path.push_back(u + 1);
     };
     dfs(st);
-    cout << ans.size() << endl;
+
     reverse(path.begin(), path.end());
     return path;
 }
@@ -81,7 +74,7 @@ int main()
     vector<int> ans = eulerianPathOnDirectedGraph(n, m);
     if (ans.size() == 0)
     {
-        cout << "NO" << endl;
+        cout << "No" << endl;
     }
     else
     {

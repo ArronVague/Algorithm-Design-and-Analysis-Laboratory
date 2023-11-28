@@ -16,6 +16,7 @@ using namespace std;
 
 vector<int> eulerianPathOnDirectedGraph(int n, int m)
 {
+    // 有向图版本
     vector<vector<int>> g(n, vector<int>());
     vector<int> inDeg(n);
 
@@ -23,8 +24,9 @@ vector<int> eulerianPathOnDirectedGraph(int n, int m)
     {
         int v, w;
         cin >> v >> w;
-        g[v].push_back(w);
-        inDeg[w]++;
+        g[v - 1].push_back(w - 1);
+        inDeg[w - 1]++;
+        // read g ...
     }
 
     // 排序，保证字典序最小
@@ -39,6 +41,7 @@ vector<int> eulerianPathOnDirectedGraph(int n, int m)
         // 出度比入度大一，为起点
         if (g[i].size() == inDeg[i] + 1)
         {
+            // 无欧拉路径
             if (st >= 0)
             {
                 return vector<int>();
@@ -48,22 +51,22 @@ vector<int> eulerianPathOnDirectedGraph(int n, int m)
         // 入度比出度大一，为终点
         if (g[i].size() + 1 == inDeg[i])
         {
+            // 无欧拉路径
             if (end >= 0)
             {
                 return vector<int>();
             }
-            else
-            {
-                end = i;
-            }
-        }
-        // 任意起点
-        if (st < 0)
-        {
-            st = 0;
+            end = i;
         }
     }
-    vector<int> path(m + 1);
+
+    // 任选一起点（比如字典序最小），此时返回的是欧拉回路
+    if (st < 0)
+    {
+        st = 0;
+    }
+
+    vector<int> path;
     function<void(int)> dfs = [&](int u)
     {
         while (g[u].size())
@@ -72,7 +75,7 @@ vector<int> eulerianPathOnDirectedGraph(int n, int m)
             g[u].erase(g[u].begin());
             dfs(v);
         }
-        path.push_back(u);
+        path.push_back(u + 1);
     };
     dfs(st);
 
