@@ -37,142 +37,46 @@ vector<vector<int>> shortestPathFloydWarshall(vector<vector<int>> dis)
 // 拓扑排序
 // https://leetcode.cn/problems/collect-coins-in-a-tree/description/ 收集树中金币
 
-class Solution
-{
-public:
-    int collectTheCoins(vector<int> &coins, vector<vector<int>> &edges)
-    {
-        int n = coins.size();
-
-        // 模板
-        vector<vector<int>> g(n);
-        vector<int> deg(n);
-        for (auto &e : edges)
-        {
-            int x = e[0], y = e[1];
-            g[x].push_back(y);
-            g[y].push_back(x);
-            // 视情况取入度
-            deg[x]++;
-            deg[y]++;
-        }
-
-        // 模板
-        queue<int> q;
-        for (int i = 0; i < n; ++i)
-        {
-            if (deg[i] == 1 && !coins[i])
-            {
-                q.push(i);
-            }
-        }
-        int ans = n - 1;
-        while (!q.empty())
-        {
-            int x = q.front();
-            q.pop();
-            ans--;
-            for (auto &y : g[x])
-            {
-                if (--deg[y] == 1 && !coins[y])
-                {
-                    q.push(y);
-                }
-            }
-        }
-        for (int i = 0; i < n; ++i)
-        {
-            if (deg[i] == 1 && coins[i])
-            {
-                q.push(i);
-            }
-        }
-        ans -= q.size();
-        while (!q.empty())
-        {
-            int x = q.front();
-            q.pop();
-            for (auto &y : g[x])
-            {
-                if (--deg[y] == 1)
-                {
-                    ans--;
-                }
-            }
-        }
-        return max(ans * 2, 0);
-    }
-};
-
 // 有向图的拓扑排序 Kahn's algorithm
 // 可以用来判断有向图是否有环、求 DAG 上的 DP 等
 // https://oi-wiki.org/graph/topo/
 // https://cp-algorithms.com/graph/topological-sort.html
 // DAG DP https://codeforces.com/problemset/problem/1679/D
 
-int n, m;
-ll k;
-int x, y;
-vector<vector<int>> g;
-vector<int> val;
-
-bool check(ll mx)
+vector<int> topoSort(int n, vector<vector<int>> edges)
 {
-    // 计算入度
-    vector<int> deg(n + 1);
-    int left = n;
-    for (int i = 1; i <= n; ++i)
+    vector<vector<int>> g(n);
+    vector<int> deg(n);
+    for (auto &e : edges)
     {
-        for (auto nxt : g[i])
-        {
-            deg[nxt]++;
-        }
+        int v = e[0], w = e[1];
+        g[v].push_back(w);
+        deg[w]++;
     }
+
     queue<int> q;
-    vector<ll> depth(n + 1, 0);
-    for (int i = 1; i <= n; ++i)
+    vector<int> orders;
+    for (int i = 0; i < n; ++i)
     {
         if (deg[i] == 0)
         {
-
             q.push(i);
-            // 可初始化dp
-            depth[i] = 1;
         }
     }
-    while (q.size())
+    while (!q.empty())
     {
-        int cur = q.front();
+        int x = q.front();
         q.pop();
-        left--;
-        for (auto nxt : g[cur])
+        orders.push_back(x);
+        for (auto y : g[x])
         {
-            deg[nxt]--;
-            depth[nxt] = max(depth[nxt], depth[cur] + 1);
-            if (deg[nxt] == 0)
+            if (--deg[y] == 0)
             {
-                q.push(nxt);
+                q.push(y);
             }
         }
     }
-    // 若left > 0说明有环
-}
-
-int main()
-{
-    cin >> n >> m >> k;
-    // 建图
-    g.resize(n + 1);
-    val.resize(n + 1);
-    for (int i = 1; i <= n; i++)
-    {
-        cin >> val[i];
-    }
-    for (int i = 0; i < m; i++)
-    {
-        cin >> x >> y;
-        g[x].push_back(y);
-    }
+    return orders;
 }
 
 // 基环树（环套树），英文名叫 pseudotree，基环树森林叫 pseudoforest
