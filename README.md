@@ -23,10 +23,17 @@
     - LCS（最长公共子序列）
   - 树形DP
 - [图论 graph.cpp](copypasta/cpp/graph.cpp)
+  - 欧拉路径
+    - 有向图
+  
   - 最短路
     - Floyd-Warshall
   - 拓扑排序
+  - 强连通分量（SCC）
+    - Kosaraju
+  
   - 基环树
+  
 - 其他
 
   - [二分 sort.cpp](copypasta/cpp/sort.cpp)
