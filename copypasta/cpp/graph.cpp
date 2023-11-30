@@ -113,6 +113,68 @@ vector<vector<int>> shortestPathFloydWarshall(vector<vector<int>> dis)
     return dis;
 }
 
+// 最小生成树 Prim
+// 适用于稠密图 O(n^2)，传入邻接矩阵 dis
+// dis[v][w] == inf 表示没有 v-w 边
+// 有些题目需要在连通分量上求 MST，这时就需要用到 root
+// 可视化 https://visualgo.net/zh/mst
+// https://oi-wiki.org/graph/mst/#prim
+void mstPrim(vector<vector<int>> dis, int root, int &mst, vector<vector<int>> &edges)
+{
+    // 注意：dis 需要保证 dis[i][i] = inf，从而避免自环的影响
+
+    const int inf = 2e9;
+    struct Node
+    {
+        int v;
+        int d;
+    };
+    // minD[i].d 表示当前 MST 到点 i 的最小距离，对应的边为 minD[i].v-i
+    vector<Node> minD(dis.size());
+    for (int i = 0; i < dis.size(); ++i)
+    {
+        minD[i] = {i, inf};
+    }
+    minD[root].d = 0;
+    vector<bool> inMST(dis.size());
+    while (true)
+    {
+        // 根据切分定理，求不在当前 MST 的点到当前 MST 的最小距离，即 minD[v].d
+        int v = -1;
+        for (int w = 0; w < inMST.size(); ++w)
+        {
+            bool in = inMST[w];
+            if (!in && (v < 0 || minD[w].d < minD[v].d))
+            {
+                v = w;
+            }
+        }
+        // 已求出 MST
+        if (v < 0)
+        {
+            return;
+        }
+
+        // 加入 MST
+        inMST[v] = true;
+        mst += minD[v].d;
+        if (v != root)
+        {
+            edges.push_back({minD[v].v, v});
+        }
+
+        // 更新 minD
+        for (int w = 0; w < dis[v].size(); ++w)
+        {
+            int d = dis[v][w];
+            if (!inMST[w] && d < minD[w].d)
+            {
+                minD[w] = {v, d};
+            }
+        }
+    }
+}
+
 // 拓扑排序
 // https://leetcode.cn/problems/collect-coins-in-a-tree/description/ 收集树中金币
 

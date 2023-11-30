@@ -28,6 +28,8 @@
   
   - 最短路
     - Floyd-Warshall
+  - 最小生成树（MST）
+    - Prim
   - 拓扑排序
   - 强连通分量（SCC）
     - Kosaraju
