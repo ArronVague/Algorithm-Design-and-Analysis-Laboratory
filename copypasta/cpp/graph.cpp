@@ -113,6 +113,52 @@ vector<vector<int>> shortestPathFloydWarshall(vector<vector<int>> dis)
     return dis;
 }
 
+// 最小生成树 Kruskal
+// 适用于稀疏图 O(mlogm)，或者边已经按权值排序的情况
+// 性质：
+// - 对于不同的 MST，同一边权的边的个数都是相同的（应用见后面的最小生成树计数）
+// - 对于任意正确加边方案，加完小于某权值的边后，图的连通性是一样的
+// https://oi-wiki.org/graph/mst/#kruskal
+// https://cp-algorithms.com/graph/mst_kruskal.html
+// 边权 [0,1] 的随机完全图的 MST 权值和是 ζ(3) = 1.202…	https://en.wikipedia.org/wiki/Random_minimum_spanning_tree https://www.sciencedirect.com/science/article/pii/0166218X85900587
+//
+// TIPS: 混合点权边权的问题，可以创建一个超级源点，把每个点 i 和超级源点相连，边权为点 i 的点权。这样就转换成了 MST 问题。
+int mstKruskal(int n, vector<vector<int>> edges)
+{
+    sort(edges.begin(), edges.end(), [](const vector<int> &a, const vector<int> &b)
+         { return a[2] < b[2]; });
+
+    vector<int> fa(n);
+    for (int i = 0; i < fa.size(); ++i)
+    {
+        fa[i] = i;
+    }
+    function<int(int)> find = [&](int x)
+    {
+        return fa[x] == x ? x : fa[x] = find(fa[x]);
+    };
+
+    int sum = 0;
+    int cntE = 0;
+    for (auto &e : edges)
+    {
+        int v = e[0], w = e[1], wt = e[2];
+        int fv = find(v), fw = find(w);
+        if (fv != fw)
+        {
+            fa[fv] = fw;
+            sum += wt;
+            cntE++;
+        }
+    }
+
+    if (cntE < n - 1)
+    {
+        return -1;
+    }
+    return sum;
+}
+
 // 最小生成树 Prim
 // 适用于稠密图 O(n^2)，传入邻接矩阵 dis
 // dis[v][w] == inf 表示没有 v-w 边
