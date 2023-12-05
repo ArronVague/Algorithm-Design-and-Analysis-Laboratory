@@ -13,7 +13,6 @@ using namespace std;
 // 有向图-欧拉路径：1. 对应的无向图是连通的；2. 若每个点的入度和出度相同则起点任意；否则起点的出度比入度多一，终点的入度比出度多一，且其余点的入度和出度相同
 //
 // NOTE: 递归前对边排序可保证输出的是字典序最小的路径
-
 vector<int> eulerianPathOnDirectedGraph(int n, int m)
 {
     // 有向图版本
@@ -86,12 +85,15 @@ vector<int> eulerianPathOnDirectedGraph(int n, int m)
 // 另一种 Dijkstra 写法
 // 适用于稠密图 O(n^2)
 // 建模 https://codeforces.com/contest/1528/problem/D
-vector<int> shortestPathDijkstra2(vector<vector<int>> g, int st)
+// 传入参数
+// 传入参数g是邻接矩阵，g[v][i].first表示v的第i条边的终点，g[v][i].second表示v的第i条边的边权
+vector<ll> shortestPathDijkstra2(vector<vector<pair<int, int>>> g, int st)
 {
     int n = g.size();
 
-    const int inf = 2e9;
-    vector<int> dis(n, inf);
+    // 2^31 - 1容易爆int，因此用long long
+    const ll inf = (1ll << 31) - 1;
+    vector<ll> dis(n, inf);
     dis[st] = 0;
     vector<bool> vis(n);
     while (true)
@@ -110,9 +112,9 @@ vector<int> shortestPathDijkstra2(vector<vector<int>> g, int st)
             return dis;
         }
         vis[v] = true;
-        for (int w = 0; w < g[v].size(); ++w)
+        for (auto &e : g[v])
         {
-            int wt = g[v][w];
+            int w = e.first, wt = e.second;
             int newD = dis[v] + wt;
             if (newD < dis[w])
             {
@@ -131,6 +133,7 @@ vector<int> shortestPathDijkstra2(vector<vector<int>> g, int st)
 // https://oi-wiki.org/graph/shortest-path/#floyd
 // https://zhuanlan.zhihu.com/p/623757829
 */
+// 传入参数dis是邻接矩阵，dis[v][w]表示v-w的边权，inf表示没有v-w边
 vector<vector<int>> shortestPathFloydWarshall(vector<vector<int>> dis)
 {
     // dis[k][i][j] 表示「经过若干个编号不超过 k 的中间节点」时，从 i 到 j 的最短路长度，其中第一维可以压缩掉
