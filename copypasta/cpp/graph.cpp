@@ -388,6 +388,50 @@ void mstPrim(vector<vector<int>> dis, int root, int &mst, vector<vector<int>> &e
     }
 }
 
+// 二分图判定+染色
+// 注：二分图也叫偶图
+// https://en.wikipedia.org/wiki/Bipartite_graph
+// https://oi-wiki.org/graph/bi-graph/#_3
+// https://cp-algorithms.com/graph/bipartite-check.html
+// 辅助证明 https://codeforces.com/contest/1839/problem/E
+//
+// 模板题 LC886 https://leetcode.cn/problems/possible-bipartition/
+// https://codeforces.com/problemset/problem/1093/D
+// https://www.luogu.com.cn/problem/P6185
+// https://codeforces.com/problemset/problem/1537/F
+bool isBipartite(vector<vector<int>> g)
+{
+    // 0 表示未访问该节点
+    vector<int> color(g.size());
+    function<bool(int, int)> f = [&](int v, int c) -> bool
+    {
+        color[v] = c;
+        for (auto w : g[v])
+        {
+            // 如果要分组，用 3^c，便于填入下标；如果要根据染色来 +/-，用 -c
+            if (color[w] == c || color[w] == 0 && !f(w, -c))
+            {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    for (int i = 0; i < color.size(); ++i)
+    {
+        int c = color[i];
+        if (c != 0)
+        {
+            continue;
+        }
+        if (!f(i, 1))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 // 拓扑排序
 // https://leetcode.cn/problems/collect-coins-in-a-tree/description/ 收集树中金币
 
