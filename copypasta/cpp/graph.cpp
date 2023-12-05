@@ -191,6 +191,65 @@ vector<ll> shortestPathDijkstra2(vector<vector<pair<int, int>>> g, int st)
     }
 }
 
+// 单源最短路 SPFA O(nm)   队列优化的 Bellman-Ford
+// 对于构建一个让 SPFA 跑到最坏情况的（网格）图，见 main/testutil/rand.go 中的 GraphHackSPFA
+// 可视化 https://visualgo.net/zh/sssp
+// https://oi-wiki.org/graph/shortest-path/#bellman-ford
+// https://cp-algorithms.com/graph/bellman_ford.html
+// https://en.wikipedia.org/wiki/Bellman%E2%80%93Ford_algorithm
+//
+// 模板题 https://www.luogu.com.cn/problem/P3385
+vector<ll> shortestPathSPFA(int n, int st, vector<vector<int>> edges)
+{
+    struct neighbor
+    {
+        int to, wt;
+    };
+    vector<vector<neighbor>> g(n, vector<neighbor>());
+    for (auto &e : edges)
+    {
+        int v = e[0], w = e[1], wt = e[2];
+        g[v].push_back({w, wt});
+        // 有向图需要注释掉下面这行
+        // g[w].push_back({v, wt});
+    }
+
+    const ll inf = (1ll << 31) - 1;
+    vector<ll> dist(n, inf);
+    dist[st] = 0;
+    queue<int> q;
+    q.push(st);
+    vector<bool> inQ(n);
+    inQ[st] = true;
+    vector<int> relaxedCnt(n);
+    while (q.size())
+    {
+        int v = q.front();
+        q.pop();
+        inQ[v] = false;
+        for (auto &e : g[v])
+        {
+            int w = e.to;
+            int newD = dist[v] + e.wt;
+            if (newD < dist[w])
+            {
+                dist[w] = newD;
+                relaxedCnt[w] = relaxedCnt[v] + 1;
+                if (relaxedCnt[w] >= n)
+                {
+                    return vector<ll>();
+                }
+                if (!inQ[w])
+                {
+                    inQ[w] = true;
+                    q.push(w);
+                }
+            }
+        }
+    }
+    return dist;
+}
+
 /*
 // 任意两点最短路 Floyd-Warshall  O(n^3)  本质是求 Min-plus matrix multiplication
 // 传入邻接矩阵 dis

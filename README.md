@@ -27,6 +27,8 @@
     - 有向图
   
   - 最短路
+    - Dijkstra
+    - SPFA（队列优化的 Bellman-Fords）
     - Floyd-Warshall
   - 最小生成树（MST）
     - Kruskal
