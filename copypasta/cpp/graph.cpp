@@ -82,6 +82,73 @@ vector<int> eulerianPathOnDirectedGraph(int n, int m)
     return path;
 }
 
+// 单源最短路 Dijkstra
+// 适用于稀疏图 O(mlogm)
+// 这里实现的是懒更新（lazy）版本的 Dijkstra，复杂度为 O(mlogm)
+// 若在插入堆时元素已在堆中，改成直接更新元素，而不是插入元素，可使复杂度降为 O(mlogn)
+//
+// st 也可以是一个点集，这相当于同时对多个点跑最短路
+// 视频讲解（第四题）https://www.bilibili.com/video/BV1wj411G7sH/
+// 可视化 https://visualgo.net/zh/sssp
+// https://oi-wiki.org/graph/shortest-path/#dijkstra
+// 最短路问题笔记 https://www.luogu.com.cn/blog/SCN/zui-duan-lu-wen-ti-bi-ji
+//
+// 模板题 https://www.luogu.com.cn/problem/P3371 https://www.luogu.com.cn/problem/P4779
+//       https://codeforces.com/problemset/problem/20/C
+//       LC743 https://leetcode-cn.com/problems/network-delay-time/
+struct dijkstraPair
+{
+    ll v, dis;
+    bool operator<(const dijkstraPair &rhs) const
+    {
+        return dis > rhs.dis;
+    }
+};
+
+vector<ll> shortestPathDijkstra(int n, int st, vector<vector<int>> edges)
+{
+    struct neighbor
+    {
+        int to, wt;
+    };
+    vector<vector<neighbor>> g(n, vector<neighbor>());
+    for (auto &e : edges)
+    {
+        int v = e[0], w = e[1], wt = e[2];
+        g[v].push_back({w, wt});
+        // 有向图需要注释掉下面这行
+        // g[w].push_back({v, wt});
+    }
+
+    const ll inf = (1ll << 31) - 1;
+    vector<ll> dist(n, inf);
+    dist[st] = 0;
+    vector<int> from(n, -1);
+    priority_queue<dijkstraPair> h;
+    h.push({st, 0});
+    while (h.size())
+    {
+        auto p = h.top();
+        h.pop();
+        int v = p.v;
+        if (p.dis > dist[v])
+        {
+            continue;
+        }
+        for (auto &e : g[v])
+        {
+            int w = e.to;
+            int newD = dist[v] + e.wt;
+            if (newD < dist[w])
+            {
+                dist[w] = newD;
+                from[w] = v;
+                h.push({w, dist[w]});
+            }
+        }
+    }
+    return dist;
+}
 // 另一种 Dijkstra 写法
 // 适用于稠密图 O(n^2)
 // 建模 https://codeforces.com/contest/1528/problem/D
