@@ -83,6 +83,45 @@ vector<int> eulerianPathOnDirectedGraph(int n, int m)
     return path;
 }
 
+// 另一种 Dijkstra 写法
+// 适用于稠密图 O(n^2)
+// 建模 https://codeforces.com/contest/1528/problem/D
+vector<int> shortestPathDijkstra2(vector<vector<int>> g, int st)
+{
+    int n = g.size();
+
+    const int inf = 2e9;
+    vector<int> dis(n, inf);
+    dis[st] = 0;
+    vector<bool> vis(n);
+    while (true)
+    {
+        int v = -1;
+        for (int w = 0; w < vis.size(); ++w)
+        {
+            bool b = vis[w];
+            if (!b && (v < 0 || dis[w] < dis[v]))
+            {
+                v = w;
+            }
+        }
+        if (v < 0)
+        {
+            return dis;
+        }
+        vis[v] = true;
+        for (int w = 0; w < g[v].size(); ++w)
+        {
+            int wt = g[v][w];
+            int newD = dis[v] + wt;
+            if (newD < dis[w])
+            {
+                dis[w] = newD;
+            }
+        }
+    }
+}
+
 /*
 // 任意两点最短路 Floyd-Warshall  O(n^3)  本质是求 Min-plus matrix multiplication
 // 传入邻接矩阵 dis
@@ -92,7 +131,6 @@ vector<int> eulerianPathOnDirectedGraph(int n, int m)
 // https://oi-wiki.org/graph/shortest-path/#floyd
 // https://zhuanlan.zhihu.com/p/623757829
 */
-
 vector<vector<int>> shortestPathFloydWarshall(vector<vector<int>> dis)
 {
     // dis[k][i][j] 表示「经过若干个编号不超过 k 的中间节点」时，从 i 到 j 的最短路长度，其中第一维可以压缩掉
