@@ -332,60 +332,64 @@ int mstKruskal(int n, vector<vector<int>> edges)
 // 有些题目需要在连通分量上求 MST，这时就需要用到 root
 // 可视化 https://visualgo.net/zh/mst
 // https://oi-wiki.org/graph/mst/#prim
-void mstPrim(vector<vector<int>> dis, int root, int &mst, vector<vector<int>> &edges)
+pair<int, vector<pair<int, int>>> mstPrim(vector<vector<int>> &dis, int root)
 {
-    // 注意：dis 需要保证 dis[i][i] = inf，从而避免自环的影响
+    int n = dis.size();
+    int inf = 1e5;
 
-    const int inf = 2e9;
-    struct Node
-    {
-        int v;
-        int d;
-    };
-    // minD[i].d 表示当前 MST 到点 i 的最小距离，对应的边为 minD[i].v-i
-    vector<Node> minD(dis.size());
-    for (int i = 0; i < dis.size(); ++i)
-    {
-        minD[i] = {i, inf};
-    }
-    minD[root].d = 0;
-    vector<bool> inMST(dis.size());
+    vector<pair<int, int>> edges;
+    edges.reserve(n - 1);
+
+    vector<pair<int, int>> minD(n, {inf, 0}); // minD[i].first represents the minimum distance from the current MST to vertex i, and minD[i].second represents the corresponding edge (minD[i].second, i).
+    minD[root].first = 0;
+
+    vector<bool> inMST(n, false); // Initially, no vertices are in the MST.
+
+    int mst = 0;
+
     while (true)
     {
-        // 根据切分定理，求不在当前 MST 的点到当前 MST 的最小距离，即 minD[v].d
+        // Find the vertex with the minimum distance to the current MST.
         int v = -1;
-        for (int w = 0; w < inMST.size(); ++w)
+        for (int w = 0; w < n; ++w)
         {
-            bool in = inMST[w];
-            if (!in && (v < 0 || minD[w].d < minD[v].d))
+            // 没有对非连通图的处理
+            // if (!inMST[w] && (v == -1 || minD[w].first < minD[v].first))
+            // {
+            //     v = w;
+            // }
+            if (!inMST[w] && minD[w].first < inf && (v == -1 || minD[w].first < minD[v].first))
             {
                 v = w;
             }
         }
-        // 已求出 MST
-        if (v < 0)
-        {
-            return;
+
+        if (v == -1)
+        { // MST is found.
+            break;
         }
 
-        // 加入 MST
+        // Add the vertex to the MST.
         inMST[v] = true;
-        mst += minD[v].d;
+        mst += minD[v].first;
+
         if (v != root)
         {
-            edges.push_back({minD[v].v, v});
+            edges.emplace_back(minD[v].second, v);
         }
 
-        // 更新 minD
-        for (int w = 0; w < dis[v].size(); ++w)
+        // Update minD.
+        for (int w = 0; w < n; ++w)
         {
-            int d = dis[v][w];
-            if (!inMST[w] && d < minD[w].d)
+            if (!inMST[w] && dis[v][w] < minD[w].first)
             {
-                minD[w] = {v, d};
+                minD[w].first = dis[v][w];
+                minD[w].second = v;
             }
         }
     }
+
+    return {mst, edges};
 }
 
 // 二分图判定+染色
