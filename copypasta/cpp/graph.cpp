@@ -335,6 +335,7 @@ int mstKruskal(int n, vector<vector<int>> edges)
 pair<int, vector<pair<int, int>>> mstPrim(vector<vector<int>> &dis, int root)
 {
     int n = dis.size();
+    // inf根据题目定，不要太大
     int inf = 1e5;
 
     vector<pair<int, int>> edges;
