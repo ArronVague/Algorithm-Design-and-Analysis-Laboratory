@@ -1,5 +1,7 @@
 # Algorithm Design and Analysis Laboratory
 
+本仓库抄自 灵茶山艾府 💭💡🎈[算法竞赛模板库](https://github.com/EndlessCheng/codeforces-go)
+
 ## Algorithm Catalog
 
 - [位运算](template/bitwise_operations.md)
@@ -33,6 +35,9 @@
   - 最小生成树（MST）
     - Kruskal
     - Prim
+  - 二分图判定（染色）
+  - 二分图最大匹配
+    - 匈牙利算法
   - 拓扑排序
   - 强连通分量（SCC）
     - Kosaraju
