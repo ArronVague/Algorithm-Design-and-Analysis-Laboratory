@@ -437,6 +437,62 @@ bool isBipartite(vector<vector<int>> g)
     return true;
 }
 
+// 二分图最大匹配 - 匈牙利算法/增广路算法 O(nm)    Hungarian algorithm
+// 注：更推荐用 Dinic，可以达到 O(m√n) 的复杂度（而且这个复杂度一般不会跑满）
+// - 超级源点连左部，右部连超级汇点，所有边的容量均为 1，最大流即最大匹配
+// - 代码 https://www.luogu.com.cn/record/123020820
+// 【推荐】可视化 https://visualgo.net/zh/matching
+//        选择「图示 - CP4 3.11a*」，然后选择「增广路 - 标准」
+// https://www.renfei.org/blog/bipartite-matching.html 推荐
+// https://oi-wiki.org/topic/graph-matching/bigraph-match/
+// https://zhuanlan.zhihu.com/p/62981901
+// https://en.wikipedia.org/wiki/Hall%27s_marriage_theorem
+// https://www.geeksforgeeks.org/maximum-bipartite-matching/
+// https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/BipartiteMatching.java.html
+// 有关随机贪心(匹配)预处理的 hack https://bzoj.blog.uoj.ac/blog/2427
+//
+// 模板题 https://www.luogu.com.cn/problem/P3386 https://www.luogu.com.cn/problem/B3605
+// LC1349 https://leetcode.cn/problems/maximum-students-taking-exam/
+// LCP04 https://leetcode-cn.com/problems/broken-board-dominoes/
+// LC2123 https://leetcode.cn/problems/minimum-operations-to-remove-adjacent-ones-in-matrix/
+vector<int> maxBipartiteMatchingHungarian(vector<vector<int>> &g)
+{
+    int n = g.size();
+    vector<int> match(n, -1);
+    vector<int> vis(n, -1);
+    int cnt = 0;
+
+    for (int root = 0; root < n; ++root)
+    {
+        if (match[root] != -1)
+        {
+            continue;
+        }
+
+        function<bool(int)> dfs = [&](int v) -> bool
+        {
+            vis[v] = root;
+            for (int w : g[v])
+            {
+                int mw = match[w];
+                if (mw == -1 || (vis[mw] != root && dfs(mw)))
+                {
+                    match[w] = v;
+                    match[v] = w;
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        if (dfs(root))
+        {
+            cnt++;
+        }
+    }
+    return match;
+}
+
 // 拓扑排序
 // https://leetcode.cn/problems/collect-coins-in-a-tree/description/ 收集树中金币
 
