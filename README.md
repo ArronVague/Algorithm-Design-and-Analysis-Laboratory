@@ -14,6 +14,10 @@
   - [字典树 trie.cpp](copypasta/cpp/trie.cpp)
   - [异或字典树 trie01.cpp](copypasta/cpp/trie01.cpp)
 
+- 数学
+  - [数论 math.cpp](copypasta/cpp/math.cpp)
+    - 埃氏筛（埃拉托斯特尼筛法）
+
 - [动态规划 dp.cpp](copypasta/cpp/dp.cpp)
   - 背包
     
@@ -27,7 +31,7 @@
 - [图论 graph.cpp](copypasta/cpp/graph.cpp)
   - 欧拉路径
     - 有向图
-  
+
   - 最短路
     - Dijkstra
     - SPFA（队列优化的 Bellman-Fords）
@@ -41,9 +45,9 @@
   - 拓扑排序
   - 强连通分量（SCC）
     - Kosaraju
-  
+
   - 基环树
-  
+
 - 其他
 
   - [二分 sort.cpp](copypasta/cpp/sort.cpp)
