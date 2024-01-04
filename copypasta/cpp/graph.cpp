@@ -247,6 +247,15 @@ vector<ll> shortestPathSPFA(int n, int st, vector<vector<int>> edges)
             }
         }
     }
+    // 注意循环完了 inQ[i] 都是 false
+
+    // EXTRA: 只是找负环的话，初始时将所有点入队即可
+    // 注意不能只从一个点出发找负环，因为可能这个点无法到达负环
+    // https://www.luogu.com.cn/problem/P2868
+
+    // EXTRA: 打印负环
+    // https://cp-algorithms.com/graph/finding-negative-cycle-in-graph.html
+    // https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/BellmanFordSP.java.html
     return dist;
 }
 
