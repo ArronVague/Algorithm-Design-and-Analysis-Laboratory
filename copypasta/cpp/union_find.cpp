@@ -1,27 +1,28 @@
+#include <bits/stdc++.h>
+using namespace std;
+
 /*
 并查集
 */
 
-#include <bits/stdc++.h>
-using namespace std;
-
 class UnionFind
 {
 private:
-    vector<int> fa;
+    vector<int> Fa;
+    int Groups;
 
 public:
     UnionFind(int n)
     {
-        fa.resize(n + 1);
+        Fa.resize(n + 1);
         for (int i = 1; i <= n; i++)
-            fa[i] = i;
+            Fa[i] = i;
     }
 
     // 递归写法
     int find(int x)
     {
-        return x == fa[x] ? x : fa[x] = find(fa[x]);
+        return x == Fa[x] ? x : Fa[x] = find(Fa[x]);
     }
 
     int merge(int x, int y)
@@ -29,7 +30,8 @@ public:
         int fx = find(x), fy = find(y);
         if (fx == fy)
             return -1;
-        fa[fx] = fy;
+        Fa[fx] = fy;
+        Groups--;
         return fy;
     }
 };
